@@ -9,7 +9,7 @@ I asked ChatGPT to give me a list of small and simple projects I could do to get
 
 - [x] Basic Port Scanner: Create a simple tool to scan a range of IP addresses for open ports. This project will help you understand network programming in Rust.
 
-- [ ] File Hash Calculator: Develop a utility to calculate the hash (MD5, SHA256, etc.) of files. This is useful in verifying the integrity of files, a common task in security.
+- [x] File Hash Calculator: Develop a utility to calculate the hash (MD5, SHA256, etc.) of files. This is useful in verifying the integrity of files, a common task in security.
 
 - [ ] Command-Line Password Generator: Build a CLI tool to generate random, secure passwords based on user-defined criteria (length, complexity).
 
