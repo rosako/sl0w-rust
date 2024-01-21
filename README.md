@@ -11,7 +11,7 @@ I asked ChatGPT to give me a list of small and simple projects I could do to get
 
 - [x] File Hash Calculator: Develop a utility to calculate the hash (MD5, SHA256, etc.) of files. This is useful in verifying the integrity of files, a common task in security.
 
-- [ ] Command-Line Password Generator: Build a CLI tool to generate random, secure passwords based on user-defined criteria (length, complexity).
+- [x] Command-Line Password Generator: Build a CLI tool to generate random, secure passwords based on user-defined criteria (length, complexity).
 
 - [ ] Directory Watcher: Create a program that monitors a specified directory for changes, like new files or modifications, which is a basic aspect of intrusion detection systems.
 
