@@ -1,0 +1,3 @@
+[target.aarch64-linux-android]
+linker = "/tmp/ndk-aarch64/bin/aarch64-linux-android-gcc"
+
