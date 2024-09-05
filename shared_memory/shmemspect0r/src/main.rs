@@ -1,6 +1,6 @@
 use std::io::{self, stdout};
 
-use shmemlib::{Segment, shm_get_struct, test_dataset};
+use shmemlib::{Segment, shm_get_struct, test_dataset, shm_get_segments};
 
 use ratatui::prelude::*;
 
@@ -30,7 +30,8 @@ use ratatui::{
 };
 
 
-static mut current_line: i32 = 1;
+static mut current_line: i32 = 0;
+static mut current_num_lines: i32 = 0;
 
 
 
@@ -141,25 +142,45 @@ fn main() -> io::Result<()> {
 fn handle_events() -> io::Result<bool> {
     if event::poll(std::time::Duration::from_millis(50))? {
         if let Event::Key(key) = event::read()?{
+
+            // quit
             if key.kind == event::KeyEventKind::Press && key.code == KeyCode::Char('q') {
                 return Ok(true);
             }
+            
+            // move down
             if key.kind == event::KeyEventKind::Press && key.code == KeyCode::Char('j') {
-                //move down
-                //let current_line = 1;
                 unsafe {
-                    current_line+=1;
+                    //current_line = (current_line+1)%current_num_lines;
+                    if(current_line < current_num_lines-1){
+                        current_line = current_line + 1;
+                    }
                 }
             }
 
+            // move up
             if key.kind == event::KeyEventKind::Press && key.code == KeyCode::Char('k') {
-                //move up
-                
                 unsafe {
-                    current_line -=1;
+                    if(current_line > 0){
+                        current_line = (current_line-1)%current_num_lines;
+                    }
                 }
             }
 
+
+            // move top
+            if key.kind == event::KeyEventKind::Press && key.code == KeyCode::Char('t') {
+                unsafe {
+                    current_line = 0;
+                }
+            }
+
+            // move bottom
+            if key.kind == event::KeyEventKind::Press && key.code == KeyCode::Char('b') {
+                unsafe {
+                    current_line = current_num_lines-1;
+                }
+            }
         }
     }
     Ok(false)
@@ -204,10 +225,14 @@ fn ui(frame: &mut Frame) {
     let mut list_items = Vec::<ListItem>::new();
 
 
-    list_items.push(ListItem::new(Line::from(Span::styled(format!("| key\t\t\tshmid\t\towner\t\tperms\t\tbytes\t\tnattch |"), Style::default().add_modifier(Modifier::BOLD | Modifier::ITALIC).fg(Color::Yellow).bg(Color::White)))));
+    list_items.push(ListItem::new(Line::from(Span::styled(format!("key\t\t\tshmid\t\towner\t\t\tperms\t\tbytes\t\tnattch"), Style::default().add_modifier(Modifier::BOLD | Modifier::ITALIC).fg(Color::Yellow).bg(Color::White)))));
 
-    let segments = test_dataset();
+    //let segments = test_dataset();
 
+    let segments = shm_get_segments(50000);
+    unsafe{
+        current_num_lines = segments.len() as i32;
+    }
 
 
     for i in 0..segments.len() {

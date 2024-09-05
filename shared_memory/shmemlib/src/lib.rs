@@ -28,19 +28,7 @@ pub fn shm_get_struct(shmid : i32) -> Segment{
         //println!("success : ret code {}", ret);
     }
 
-    /*
-    println!("0x{:08x} {} {} {} {} {} {} {}",
-             shm_info.shm_perm.__key,
-             shmid,
-             shm_info.shm_segsz,
-             shm_info.shm_nattch,
-             shm_info.shm_cpid,
-             shm_info.shm_lpid,
-             shm_info.shm_perm.mode & 0x777,
-             uid_to_str(shm_info.shm_perm.uid));
-
-    */
-
+    
     Segment {
         key : format!("0x{:08x}", shm_info.shm_perm.__key),
         shmid : format!("{}", shmid),
@@ -50,6 +38,26 @@ pub fn shm_get_struct(shmid : i32) -> Segment{
         nattch : format!("{}", shm_info.shm_nattch)
     }
 
+
+}
+
+
+pub fn shm_get_segments(max_ids : i32) -> Vec<Segment>{
+
+    let mut segments_vector: Vec<Segment> = Vec::new();
+
+    let mut shm_info : shmid_ds = unsafe { std::mem::zeroed() };
+
+
+    for id in 0..max_ids {
+        let ret = unsafe { shmctl(id, SHM_STAT, &mut shm_info) };
+
+        if ret != -1 {
+            segments_vector.push(shm_get_struct(id));
+        }
+    }
+
+    segments_vector
 
 }
 
@@ -66,6 +74,55 @@ impl Segment {
                 self.nattch
                 )
     }
+}
+
+
+
+
+
+fn uid_to_str(owner_uuid : u32) -> String{
+    let uuid_pwd = unsafe { getpwuid(owner_uuid) };
+    if uuid_pwd.is_null() {
+        eprintln!("Failed to get the owner name for UID {}", owner_uuid);
+        return format!("unwknown");;
+    }
+
+    let pw_name = unsafe {
+        CStr::from_ptr((*uuid_pwd).pw_name).to_string_lossy().into_owned()
+    };
+
+    format!("{}({})", owner_uuid, pw_name)
+
+}
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+
+
+
+pub fn shm_get(shmid : i32){
+    let mut shm_info = unsafe { std::mem::zeroed::<shmid_ds>() };
+    let ret = unsafe { shmctl(shmid, SHM_STAT, &mut shm_info) };
+    if ret == -1 {
+        let err = io::Error::last_os_error();
+        eprintln!("Failed to get info for segement id {}: {}", shmid, err);
+    }else {
+        //println!("success : ret code {}", ret);
+    }
+
+    println!("0x{:08x} {} {} {} {} {} {} {}",
+             shm_info.shm_perm.__key,
+             shmid,
+             shm_info.shm_segsz,
+             shm_info.shm_nattch,
+             shm_info.shm_cpid,
+             shm_info.shm_lpid,
+             shm_info.shm_perm.mode & 0x777,
+             uid_to_str(shm_info.shm_perm.uid));
+
 }
 
 
@@ -145,42 +202,4 @@ pub fn test_dataset() -> Vec<Segment>{
 
 
 
-
-fn uid_to_str(owner_uuid : u32) -> String{
-    let uuid_pwd = unsafe { getpwuid(owner_uuid) };
-    if uuid_pwd.is_null() {
-        eprintln!("Failed to get the owner name for UID {}", owner_uuid);
-        return format!("unwknown");;
-    }
-
-    let pw_name = unsafe {
-        CStr::from_ptr((*uuid_pwd).pw_name).to_string_lossy().into_owned()
-    };
-
-    format!("{}({})", owner_uuid, pw_name)
-
-}
-
-
-pub fn shm_get(shmid : i32){
-    let mut shm_info = unsafe { std::mem::zeroed::<shmid_ds>() };
-    let ret = unsafe { shmctl(shmid, SHM_STAT, &mut shm_info) };
-    if ret == -1 {
-        let err = io::Error::last_os_error();
-        eprintln!("Failed to get info for segement id {}: {}", shmid, err);
-    }else {
-        //println!("success : ret code {}", ret);
-    }
-
-    println!("0x{:08x} {} {} {} {} {} {} {}",
-             shm_info.shm_perm.__key,
-             shmid,
-             shm_info.shm_segsz,
-             shm_info.shm_nattch,
-             shm_info.shm_cpid,
-             shm_info.shm_lpid,
-             shm_info.shm_perm.mode & 0x777,
-             uid_to_str(shm_info.shm_perm.uid));
-
-}
 

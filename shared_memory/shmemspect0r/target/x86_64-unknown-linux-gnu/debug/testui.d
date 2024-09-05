@@ -1,1 +1,1 @@
-/home/urk3l/learning/rust/shared_memory/shmemspect0r/target/x86_64-unknown-linux-gnu/debug/testui: /home/urk3l/learning/rust/shared_memory/shmemlib/src/lib.rs /home/urk3l/learning/rust/shared_memory/shmemspect0r/src/main.rs
+/home/urk3l/learning/rust/sl0w-rust/shared_memory/shmemspect0r/target/x86_64-unknown-linux-gnu/debug/testui: /home/urk3l/learning/rust/sl0w-rust/shared_memory/shmemlib/src/lib.rs /home/urk3l/learning/rust/sl0w-rust/shared_memory/shmemspect0r/src/main.rs
