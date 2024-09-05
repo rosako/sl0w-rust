@@ -13,6 +13,8 @@ I asked ChatGPT to give me a list of small and simple projects I could do to get
 
 - [x] Command-Line Password Generator: Build a CLI tool to generate random, secure passwords based on user-defined criteria (length, complexity).
 
+- [x] Shared memory inspector : Build a tool that list all the existing shared memory segments.
+
 - [ ] Directory Watcher: Create a program that monitors a specified directory for changes, like new files or modifications, which is a basic aspect of intrusion detection systems.
 
 - [ ] Simple Packet Sniffer: Implement a basic packet sniffer to capture and display network traffic. It's a fundamental tool in network analysis and security.
